@@ -14,19 +14,17 @@ export const App = () => {
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(12);
   const [isLoading, setIsLoading] = useState(false);
   const [isVissible, setIsVissible] = useState(false);
-  const [error, setError] = useState(false);
+  const [, setError] = useState(false);
+
 
   useEffect(() => {
     if (query === '') {
       return;
     }
-    getPictures();
-  }, [query, page])
 
-  const getPictures = async () => {
+    const getPictures = async () => {
     setIsLoading(true);
 
     try {
@@ -37,13 +35,13 @@ export const App = () => {
         return toast.error("Sorry, there are no images matching your search query. Please try again.");
       };
 
-      if (page > Math.ceil(totalHits / perPage)) {
+      if (page > Math.ceil(totalHits / 12)) {
         setIsVissible(false)
         return toast.warn("We're sorry, but you've reached the end of search results.");
       };
 
-      setImages([...images, ...hits]);
-      setIsVissible(page < Math.ceil(totalHits / perPage))
+      setImages(prevState => [...prevState, ...hits]);
+      setIsVissible(page < Math.ceil(totalHits / 12))
   
     } catch (error) {
       setError(error.message);
@@ -52,14 +50,19 @@ export const App = () => {
     finally {
         setIsLoading(false)
       }
-  }
+    }
+    
+      getPictures();
+    
+  }, [query, page])
+
+  
 
   const handleFormSubmit = picture => {
     setQuery(picture);
     setImages([]);
     setPage(1);
     setError(false);
-    setPerPage(12);
   }
 
   const loadMoreButton = () => {
