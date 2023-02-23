@@ -59,6 +59,7 @@ export const App = () => {
     setImages([]);
     setPage(1);
     setError(false);
+    setPerPage(12);
   }
 
   const loadMoreButton = () => {
